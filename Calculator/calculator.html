@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #87CEEB;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .display {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
+            font-size: 2em;
+            margin-bottom: 10px;
+            padding: 10px;
+            text-align: right;
+            height: 50px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            background-color: #008cba;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.5em;
+            padding: 20px;
+            cursor: pointer;
+        }
+        .button:active {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="button" onclick="clearDisplay()">C</button>
+            <button class="button" onclick="deleteNumber()">del</button>
+            <button class="button" onclick="appendNumber('(')">(</button>
+            <button class="button" onclick="appendNumber(')')">)</button>
+            <button class="button" onclick="appendNumber(7)">7</button>
+            <button class="button" onclick="appendNumber(8)">8</button>
+            <button class="button" onclick="appendNumber(9)">9</button>
+            <button class="button" onclick="setOperation('/')">÷</button>
+            <button class="button" onclick="appendNumber(4)">4</button>
+            <button class="button" onclick="appendNumber(5)">5</button>
+            <button class="button" onclick="appendNumber(6)">6</button>
+            <button class="button" onclick="setOperation('*')">×</button>
+            <button class="button" onclick="appendNumber(1)">1</button>
+            <button class="button" onclick="appendNumber(2)">2</button>
+            <button class="button" onclick="appendNumber(3)">3</button>
+            <button class="button" onclick="setOperation('-')">−</button>
+            <button class="button" onclick="appendNumber(0)">0</button>
+            <button class="button" onclick="appendDecimal()">.</button>
+            <button class="button" onclick="useAns()">ans</button>
+            <button class="button" onclick="setOperation('+')">+</button>
+            <button class="button" onclick="calculate()" style="grid-column: span 4;">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentNumber = '';
+        let previousNumber = '';
+        let operation = null;
+        let answer = 0;
+
+        function appendNumber(number) {
+            if (currentNumber === '0') currentNumber = '';
+            currentNumber += number;
+            updateDisplay();
+        }
+
+        function setOperation(op) {
+            if (currentNumber === '') return;
+            if (previousNumber !== '') {
+                calculate();
+            }
+            operation = op;
+            previousNumber = currentNumber;
+            currentNumber = '';
+        }
+
+        function calculate() {
+            let result;
+            try {
+                result = eval(previousNumber + operation + currentNumber);
+            } catch {
+                result = 'Error';
+            }
+            if (result === undefined || result === 'Error') return;
+            currentNumber = result;
+            answer = result;
+            operation = undefined;
+            previousNumber = '';
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentNumber = '';
+            previousNumber = '';
+            operation = null;
+            updateDisplay();
+        }
+
+        function deleteNumber() {
+            currentNumber = currentNumber.toString().slice(0, -1);
+            updateDisplay();
+        }
+
+        function appendDecimal() {
+            if (!currentNumber.includes('.')) {
+                currentNumber += '.';
+                updateDisplay();
+            }
+        }
+
+        function useAns() {
+            currentNumber = answer.toString();
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            display.innerText = currentNumber;
+        }
+
+        clearDisplay();
+    </script>
+</body>
+</html>
